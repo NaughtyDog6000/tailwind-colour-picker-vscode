@@ -6,7 +6,7 @@ import * as vscode from 'vscode';
 // Your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
 	// Regular expression to match HSL values without hsl() wrapper
-	const hslRegex = /(\d{1,3})\s*([\d.]+)%\s*([\d.]+)%/g;
+	const hslRegex = /(\d{1,3}(?:\.\d+)?)(?:deg)?\s*,?\s*(\d{1,3}(?:\.\d+)?)%?\s*,?\s*(\d{1,3}(?:\.\d+)?)%?/g;
 
 	// Register color provider for CSS
 	const disposable = vscode.languages.registerColorProvider('css', {
@@ -22,7 +22,7 @@ export function activate(context: vscode.ExtensionContext) {
 					document.positionAt(match.index + match[0].length)
 				);
 
-				const hue = parseInt(match[1], 10);
+				const hue = parseFloat(match[1]) / 360;
 				const saturation = parseFloat(match[2]) / 100;
 				const lightness = parseFloat(match[3]) / 100;
 
